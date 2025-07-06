@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../include/index.h"
+#include "index.h"
 
 class ConverterJSON {
 public:
