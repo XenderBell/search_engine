@@ -1,4 +1,9 @@
-add_subdirectory(../nlohmann_json ${CMAKE_CURRENT_BINARY_DIR}/nlohmann_json)
+include(FetchContent)
+FetchContent_Declare(json
+        GIT_REPOSITORY https://github.com/nlohmann/json
+        GIT_TAG v3.10.5
+        )
+FetchContent_MakeAvailable(json)
 
 add_executable(search_engine
         main.cpp
