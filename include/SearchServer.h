@@ -1,5 +1,5 @@
 #pragma once
-#include "../include/InvertedIndex.h"
+#include "InvertedIndex.h"
 
 class SearchServer{
 public:
