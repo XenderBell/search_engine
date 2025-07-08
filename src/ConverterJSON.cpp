@@ -71,7 +71,7 @@ void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers, 
             }
         }
     }
-    answerFile << list;
+    answerFile << std::setw(3) << list;
 }
 
 void ConverterJSON::launch(){
@@ -91,4 +91,15 @@ void ConverterJSON::launch(){
             std::cout << name << " " << version << std::endl;
         }
     }
+}
+
+bool ConverterJSON::requestExist() {
+    bool isOpen;
+    std::ifstream request(requestsWay);
+    if (request.is_open())
+        isOpen = true;
+    else
+        isOpen = false;
+    request.close();
+    return  isOpen;
 }
