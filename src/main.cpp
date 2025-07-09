@@ -15,16 +15,25 @@ int main(){
     catch (const std::exception &x) {
         std::cerr << "Config error: " << x.what() << std::endl;
     }
-
     auto textDocs = Converter.GetTextDocuments();
-    auto responsesLimit = Converter.GetResponsesLimit();
-    auto request = Converter.GetRequests();
 
-    Invert.UpdateDocumentBase(textDocs);
-    SearchServer Search (Invert);
+    if (Converter.requestExist()) {
 
-    std::vector<std::vector<RelativeIndex>> searchResult = Search.search(request);
+        auto responsesLimit = Converter.GetResponsesLimit();
+        auto request = Converter.GetRequests();
 
-    Converter.putAnswers(searchResult, responsesLimit);
+        Invert.UpdateDocumentBase(textDocs);
+        SearchServer Search(Invert);
+
+        std::vector<std::vector<RelativeIndex>> searchResult = Search.search(request);
+
+        if (Converter.answerExist()) {
+            Converter.putAnswers(searchResult, responsesLimit);
+        }
+        else
+            std::cout << "Answers file does not exist." << std::endl;
+    }
+    else
+        std::cout << "Requests file does not exist, or it cannot be created." << std::endl;
 
 }
