@@ -103,3 +103,14 @@ bool ConverterJSON::requestExist() {
     request.close();
     return  isOpen;
 }
+
+bool ConverterJSON::answerExist() {
+    bool isOpen;
+    std::ifstream answers(answersWay);
+    if (answers.is_open())
+        isOpen = true;
+    else
+        isOpen = false;
+    answers.close();
+    return  isOpen;
+}
