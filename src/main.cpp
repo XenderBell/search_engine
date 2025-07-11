@@ -31,9 +31,9 @@ int main(){
             Converter.putAnswers(searchResult, responsesLimit);
         }
         else
-            std::cout << "Answers file does not exist." << std::endl;
+            std::cout << "Answers file does not exist, or it cannot be created." << std::endl;
     }
     else
-        std::cout << "Requests file does not exist, or it cannot be created." << std::endl;
+        std::cout << "Requests file does not exist." << std::endl;
 
 }
