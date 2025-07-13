@@ -17,7 +17,7 @@ int main(){
     }
     auto textDocs = Converter.GetTextDocuments();
 
-    if (Converter.requestExist()) {
+    if (Converter.isExist(Converter.getWay(2))) {
 
         auto responsesLimit = Converter.GetResponsesLimit();
         auto request = Converter.GetRequests();
@@ -27,13 +27,10 @@ int main(){
 
         std::vector<std::vector<RelativeIndex>> searchResult = Search.search(request);
 
-        if (Converter.answerExist()) {
-            Converter.putAnswers(searchResult, responsesLimit);
-        }
-        else
-            std::cout << "Answers file does not exist, or it cannot be created." << std::endl;
+        Converter.putAnswers(searchResult, responsesLimit);
+
     }
     else
-        std::cout << "Requests file does not exist." << std::endl;
+        std::cerr << "Requests file does not exist." << std::endl;
 
 }
