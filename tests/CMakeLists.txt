@@ -16,7 +16,8 @@ add_executable(server_test index_tests.cpp server_tests.cpp
         ${CMAKE_SOURCE_DIR}/include/InvertedIndex.h
         ${CMAKE_SOURCE_DIR}/include/SearchServer.h
         ${CMAKE_SOURCE_DIR}/src/InvertedIndex.cpp
-        ${CMAKE_SOURCE_DIR}/src/SearchServer.cpp)
+        ${CMAKE_SOURCE_DIR}/src/SearchServer.cpp
+        ${CMAKE_SOURCE_DIR}/src/textEdit.cpp)
 
 target_include_directories(server_test PUBLIC ${gtest_SOURCE_DIR}/include ${INCLUDE_DIR})
 
