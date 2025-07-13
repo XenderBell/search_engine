@@ -2,22 +2,25 @@
 #include <string>
 #include "textEdit.h"
 #include <thread>
+#include <algorithm>
 
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs){
     for (int i = 0; i < input_docs.size(); i++){
         docs.push_back(input_docs[i]);
     }
-    std::thread t[docs.size()];
+    std::vector<std::thread> threads;
     for (int i = 0; i < docs.size(); i++){
-        std::vector<std::string> words;
-        t[i] = std::thread(split_text,docs[i], std::ref(words));
-        t[i].join();
-        for (int j = 0; j < words.size(); j++){
-            if (!freq_dictionary.contains(words[j])) {
-                freq_dictionary[words[j]] = GetWordCount(words[j]);
+        threads.push_back(std::thread([&]() {
+            std::vector<std::string> words;
+            split_text(docs[i], std::ref(words));
+            for (int j = 0; j < words.size(); j++) {
+                if (!freq_dictionary.contains(words[j])) {
+                    freq_dictionary[words[j]] = GetWordCount(words[j]);
+                }
             }
-        }
+        }));
     }
+    std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 }
 
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word){
