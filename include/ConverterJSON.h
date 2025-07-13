@@ -26,8 +26,8 @@ public:
 
     void launch();
 
-    bool requestExist();
+    bool isExist(std::string way);
 
-    bool answerExist();
+    std::string getWay(int number);
 
 };
