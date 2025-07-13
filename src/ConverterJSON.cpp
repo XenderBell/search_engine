@@ -35,43 +35,48 @@ std::vector<std::string> ConverterJSON::GetRequests(){
 
 void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers, int max_responses){
     std::ofstream answerFile(answersWay);
-    std::string requestIDType = "request00";
-    nlohmann::json list;
-    for (int i = 0; i < answers.size(); i ++){
-        std::string requestID = requestIDType + std::to_string(i);
-        auto requestRel = answers[i];
-        float summaryRel = 0.0;
-        bool result = true;
-        std::vector<float> ranks;
-        for (int j = 0; j < requestRel.size(); j++){
-            summaryRel += requestRel[j].rank;
-            ranks.push_back(requestRel[j].rank);
-        }
-        if (summaryRel == 0)
-            result = false;
-        list["answers"][requestID]["result"] = result;
-        if (result){
-            int responcesCount;
-            if (requestRel.size() > max_responses)
-                responcesCount = max_responses;
-            else
-                responcesCount = requestRel.size();
-            std::sort(ranks.begin(), ranks.end());
-            for (int j = ranks.size()-1; j >= 0; j--){
-                for (auto it = requestRel.begin(); it != requestRel.end(); ++it){
-                    if (ranks[j] == it->rank){
-                        list["answers"][requestID]["relevance"].push_back(
-                                {
-                                        {"docid", it->doc_id},
-                                        {"rank", it->rank}
-                                }
-                        );
+    if (!answerFile.is_open()){
+        std::cerr << "Opening file error!" << std::endl;
+    }
+    else {
+        std::string requestIDType = "request00";
+        nlohmann::json list;
+        for (int i = 0; i < answers.size(); i++) {
+            std::string requestID = requestIDType + std::to_string(i);
+            auto requestRel = answers[i];
+            float summaryRel = 0.0;
+            bool result = true;
+            std::vector<float> ranks;
+            for (int j = 0; j < requestRel.size(); j++) {
+                summaryRel += requestRel[j].rank;
+                ranks.push_back(requestRel[j].rank);
+            }
+            if (summaryRel == 0)
+                result = false;
+            list["answers"][requestID]["result"] = result;
+            if (result) {
+                int responcesCount;
+                if (requestRel.size() > max_responses)
+                    responcesCount = max_responses;
+                else
+                    responcesCount = requestRel.size();
+                std::sort(ranks.begin(), ranks.end());
+                for (int j = ranks.size() - 1; j >= 0; j--) {
+                    for (auto it = requestRel.begin(); it != requestRel.end(); ++it) {
+                        if (ranks[j] == it->rank) {
+                            list["answers"][requestID]["relevance"].push_back(
+                                    {
+                                            {"docid", it->doc_id},
+                                            {"rank",  it->rank}
+                                    }
+                            );
+                        }
                     }
                 }
             }
         }
+        answerFile << std::setw(3) << list;
     }
-    answerFile << std::setw(3) << list;
 }
 
 void ConverterJSON::launch(){
@@ -93,24 +98,25 @@ void ConverterJSON::launch(){
     }
 }
 
-bool ConverterJSON::requestExist() {
-    bool isOpen;
-    std::ifstream request(requestsWay);
-    if (request.is_open())
-        isOpen = true;
+bool ConverterJSON::isExist(std::string way) {
+    std::fstream file(way);
+    if (file.is_open())
+        return true;
     else
-        isOpen = false;
-    request.close();
-    return  isOpen;
+        return false;
+    file.close();
 }
 
-bool ConverterJSON::answerExist() {
-    bool isOpen;
-    std::ifstream answers(answersWay);
-    if (answers.is_open())
-        isOpen = true;
-    else
-        isOpen = false;
-    answers.close();
-    return  isOpen;
+std::string ConverterJSON::getWay(int number) {
+    switch(number){
+        case 1:
+            return configWay;
+            break;
+        case 2:
+            return requestsWay;
+            break;
+        case 3:
+            return answersWay;
+            break;
+    }
 }
