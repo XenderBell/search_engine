@@ -33,7 +33,7 @@ std::vector<std::string> ConverterJSON::GetRequests(){
     return requestsRecord["requests"];
 }
 
-void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers, int max_responses){
+void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers){
     std::ofstream answerFile(answersWay);
     if (!answerFile.is_open()){
         std::cerr << "Opening file error!" << std::endl;
@@ -55,23 +55,14 @@ void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers, 
                 result = false;
             list["answers"][requestID]["result"] = result;
             if (result) {
-                int responcesCount;
-                if (requestRel.size() > max_responses)
-                    responcesCount = max_responses;
-                else
-                    responcesCount = requestRel.size();
                 std::sort(ranks.begin(), ranks.end());
-                for (int j = ranks.size() - 1; j >= 0; j--) {
-                    for (auto it = requestRel.begin(); it != requestRel.end(); ++it) {
-                        if (ranks[j] == it->rank) {
-                            list["answers"][requestID]["relevance"].push_back(
-                                    {
-                                            {"docid", it->doc_id},
-                                            {"rank",  it->rank}
-                                    }
-                            );
-                        }
-                    }
+                for (auto it = requestRel.begin(); it != requestRel.end(); ++it) {
+                    list["answers"][requestID]["relevance"].push_back(
+                            {
+                                    {"docid", it->doc_id},
+                                    {"rank",  it->rank}
+                            }
+                    );
                 }
             }
         }
@@ -104,7 +95,6 @@ bool ConverterJSON::isExist(std::string way) {
         return true;
     else
         return false;
-    file.close();
 }
 
 std::string ConverterJSON::getWay(int number) {
