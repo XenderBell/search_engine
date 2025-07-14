@@ -1,8 +1,7 @@
-#include "gtest/gtest.h"
-#include "../include/ConverterJSON.h"
-#include "../include/InvertedIndex.h"
-#include "../include/SearchServer.h"
-#include "../include/textEdit.h"
+e "gtest/gtest.h"
+#include "InvertedIndex.h"
+#include "SearchServer.h"
+#include "textEdit.h"
 
 using namespace std;
 
@@ -22,7 +21,9 @@ TEST(TestCaseSearchServer, TestSimple) {
                     {1, 0.3}
             },
             {
-
+                    {0, 0.0},
+                    {0, 0.0},
+                    {0, 0.0}
             }
     };
 
@@ -31,7 +32,7 @@ TEST(TestCaseSearchServer, TestSimple) {
 
     SearchServer srv(idx);
 
-    std::vector<vector<RelativeIndex>> result = srv.search(request);
+    std::vector<vector<RelativeIndex>> result = srv.search(request, 5);
 
     ASSERT_EQ(result, expected);
 }
@@ -78,7 +79,7 @@ TEST(TestCaseSearchServer, TestTop5) {
 
     SearchServer srv(idx);
 
-    std::vector<vector<RelativeIndex>> result = srv.search(request);
+    std::vector<vector<RelativeIndex>> result = srv.search(request, 5);
 
     ASSERT_EQ(result, expected);
 }
