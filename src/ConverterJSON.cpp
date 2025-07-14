@@ -118,8 +118,6 @@ std::string ConverterJSON::getWay(int number) {
         case 3:
             return answersWay;
             break;
-        default:
-            return configWay;
-            break;
     }
+    return {};
 }
