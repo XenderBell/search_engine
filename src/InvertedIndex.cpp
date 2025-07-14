@@ -10,7 +10,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs){
     }
     std::vector<std::thread> threads;
     for (int i = 0; i < docs.size(); i++){
-        threads.push_back(std::thread([&]() {
+        threads.push_back(std::thread([&, i]() {
             std::vector<std::string> words;
             split_text(docs[i], std::ref(words));
             for (int j = 0; j < words.size(); j++) {
@@ -20,7 +20,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs){
             }
         }));
     }
-    std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+    std::for_each(threads.begin(), threads.end(), [](auto &it){it.join();});
 }
 
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word){
