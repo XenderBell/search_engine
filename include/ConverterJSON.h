@@ -22,7 +22,7 @@ public:
 
     std::vector <std::string> GetRequests();
 
-    void putAnswers(std::vector <std::vector<RelativeIndex>> answers, int max_responses);
+    void putAnswers(std::vector <std::vector<RelativeIndex>> answers);
 
     void launch();
 
