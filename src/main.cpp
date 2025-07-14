@@ -25,9 +25,9 @@ int main(){
         Invert.UpdateDocumentBase(textDocs);
         SearchServer Search(Invert);
 
-        std::vector<std::vector<RelativeIndex>> searchResult = Search.search(request);
+        std::vector<std::vector<RelativeIndex>> searchResult = Search.search(request, responsesLimit);
 
-        Converter.putAnswers(searchResult, responsesLimit);
+        Converter.putAnswers(searchResult);
 
     }
     else
