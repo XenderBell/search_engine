@@ -4,7 +4,7 @@
 #include <string>
 #include <cmath>
 
-std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input){
+std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input, int ResponceLimit){
     std::vector<std::vector<RelativeIndex>> searchingResult;
     for (int i = 0; i < queries_input.size(); i++){
         std::vector<RelativeIndex> localSearch(_index.docsCount());
@@ -33,7 +33,26 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
             if (isnan(localSearch[j].rank))
                 localSearch[j].rank = 0;
         }
-        searchingResult.push_back(localSearch);
+        ranks.clear();
+        for (int j = 0; j < localSearch.size(); j++){
+            ranks.push_back(localSearch[j].rank);
+        }
+        std::sort(ranks.begin(), ranks.end());
+        std::vector<RelativeIndex> SortedResult;
+        for (int j = ranks.size() - 1; j >= 0; j--) {
+            for (int k = 0; k < ranks.size(); k++) {
+                if (ranks[j] == localSearch[k].rank) {
+                    SortedResult.push_back(localSearch[k]);
+                }
+            }
+        }
+        if (SortedResult.size() > ResponceLimit){
+            for (int j = 0; j < (SortedResult.size() - ResponceLimit); j++){
+                SortedResult.pop_back();
+            }
+        }
+        searchingResult.push_back(SortedResult);
+
     }
     return searchingResult;
 }
