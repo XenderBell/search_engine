@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
-#include "../include/ConverterJSON.h"
-#include "../include/InvertedIndex.h"
-#include "../include/textEdit.h"
+#include "InvertedIndex.h"
+#include "textEdit.h"
 
 using namespace std;
 
