@@ -1,4 +1,4 @@
-e "gtest/gtest.h"
+#include "gtest/gtest.h"
 #include "InvertedIndex.h"
 #include "SearchServer.h"
 #include "textEdit.h"
