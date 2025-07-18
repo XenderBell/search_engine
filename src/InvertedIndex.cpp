@@ -29,10 +29,12 @@ std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word){
         Entry newEntry;
         newEntry.doc_id = i;
         int wordEntries = 0;
-        size_t index{};
-        while ((index = docs[i].find(word, index)) != std::string::npos){
-            ++wordEntries;
-            index += word.length();
+        std::vector<std::string> splited;
+        split_text(docs[i], splited);
+        for (int j = 0; j < splited.size(); j++){
+            if (splited[j] == word){
+                wordEntries += 1;
+            }
         }
         newEntry.count = wordEntries;
         if (newEntry.count > 0)
