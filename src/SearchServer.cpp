@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <algorithm>
 
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input, int ResponceLimit){
     std::vector<std::vector<RelativeIndex>> searchingResult;
@@ -19,7 +20,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
             auto freq = _index.getFreqDictionary()[requestsWords[j]];
             if (!freq.empty()) {
                 for (int k = 0; k < freq.size(); k++) {
-                    localSearch[k].rank += freq[k].count;
+                    localSearch[freq[k].doc_id].rank += freq[k].count;
                 }
             }
         }
@@ -33,25 +34,14 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
             if (isnan(localSearch[j].rank))
                 localSearch[j].rank = 0;
         }
-        ranks.clear();
-        for (int j = 0; j < localSearch.size(); j++){
-            ranks.push_back(localSearch[j].rank);
+        std::sort(localSearch.begin(), localSearch.end(),
+                  [](const RelativeIndex &a, RelativeIndex &b){
+                      return a.rank > b.rank;
+                  });
+        if (localSearch.size() > ResponceLimit){
+            localSearch.resize(ResponceLimit);
         }
-        std::sort(ranks.begin(), ranks.end());
-        std::vector<RelativeIndex> SortedResult;
-        for (int j = ranks.size() - 1; j >= 0; j--) {
-            for (int k = 0; k < ranks.size(); k++) {
-                if (ranks[j] == localSearch[k].rank) {
-                    SortedResult.push_back(localSearch[k]);
-                }
-            }
-        }
-        if (SortedResult.size() > ResponceLimit){
-            for (int j = 0; j < (SortedResult.size() - ResponceLimit); j++){
-                SortedResult.pop_back();
-            }
-        }
-        searchingResult.push_back(SortedResult);
+        searchingResult.push_back(localSearch);
 
     }
     return searchingResult;
